@@ -1,0 +1,8 @@
+__pycache__/
+cc/node_modules/
+cc/home-*/
+cc/requests.log
+cc/last_request.json
+recording/node_modules/
+# the videos are generated (node recording/record.mjs); the deck has its own copies in slides/public/video
+recordings/

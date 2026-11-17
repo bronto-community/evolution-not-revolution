@@ -1,0 +1,8 @@
+{
+  "name": "evolution-not-revolution-lab",
+  "private": true,
+  "description": "Headless browser for make walk / screens / record",
+  "devDependencies": {
+    "playwright-chromium": "1.64.1"
+  }
+}

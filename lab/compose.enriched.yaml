@@ -1,0 +1,42 @@
+# The enriched lab: everything from compose.yaml unchanged (same images, same start commands), plus
+#  - the OpenTelemetry Injector + Python agent, the way the packages install them on a box (/etc/ld.so.preload),
+#  - trace_id/span_id appended to the log format the team already has,
+#  - an OpenTelemetry Collector instead of the log shipper: log files + traces -> OpenSearch, traces -> Jaeger.
+
+x-injector: &injector
+  - ./logs/enriched:/var/log/transit
+  - ./injector/ld.so.preload:/etc/ld.so.preload:ro                      # activates libotelinject.so for every process
+  - ./injector/etc:/etc/opentelemetry/injector:ro                         # injector.conf, default_env.conf
+  - ./injector/root/usr/lib/opentelemetry:/usr/lib/opentelemetry:ro      # libotelinject.so, the Python agent
+
+x-logformat: &logformat "%(asctime)s %(hostname)s %(app)s[%(version)s]: %(levelname)s %(message)s trace_id=%(otelTraceID)s span_id=%(otelSpanID)s"
+
+services:
+  departures-api:
+    volumes: *injector
+    environment:
+      OTEL_SERVICE_NAME: departures-api
+      OTEL_RESOURCE_ATTRIBUTES: service.version=3.1.0,deployment.environment.name=production
+      LOG_FORMAT: *logformat
+
+  stops-api:
+    volumes: *injector
+    environment:
+      OTEL_SERVICE_NAME: stops-api
+      OTEL_RESOURCE_ATTRIBUTES: service.version=1.8.2,deployment.environment.name=production
+      LOG_FORMAT: *logformat
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.165.0
+    command: [--config=/etc/otelcol/config.yaml]
+    user: "0"                                   # read the log files, write its read positions
+    volumes:
+      - ./collector/config.yaml:/etc/otelcol/config.yaml:ro
+      - ./logs/enriched:/var/log/transit:ro     # read the central log bucket
+      - otelcol:/var/lib/otelcol                # read positions
+    networks: [default, shared]
+    restart: unless-stopped
+    mem_limit: 512m
+
+volumes:
+  otelcol:

@@ -1,0 +1,8 @@
+{
+  "name": "agent-demo-claude-code",
+  "private": true,
+  "description": "Claude Code, pinned to the version the recordings were made with",
+  "dependencies": {
+    "@anthropic-ai/claude-code": "2.1.312"
+  }
+}

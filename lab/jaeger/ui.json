@@ -1,0 +1,9 @@
+{
+  "linkPatterns": [
+    {
+      "type": "traces",
+      "url": "http://localhost:5601/app/data-explorer/discover#?_a=(discover:(columns:!(_source),isDirty:!f,sort:!()),metadata:(indexPattern:enriched,view:discover))&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-6h,to:now))&_q=(filters:!(),query:(language:kuery,query:'traceId:#{traceID}'))",
+      "text": "Logs and spans of this trace in Discover"
+    }
+  ]
+}

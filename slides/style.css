@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+
+/* ── Bronto brand theme (bronto.io look & feel) ──────────────────────────────
+   Light, warm-cream background · Source Serif display headers · Radio Canada Big
+   body · Electric Sapphire / Tropical Mint / Lemon Lime accents.
+   Tweak brand values here; everything downstream reads these vars.            */
+
+:root {
+  /* Surfaces */
+  --bg:            #FAF8F4;   /* warm cream (hsl 40 33% 98%)  */
+  --surface:       #FFFFFF;   /* cards / panels               */
+  --cream:         #FFEAD7;   /* Antique White                */
+  --ink:           #2B2620;   /* warm near-black text         */
+  --ink-dim:       #857B6E;   /* muted text                   */
+  --border:        #E7E0D4;   /* hairline borders             */
+
+  /* Brand palette */
+  --sapphire:      #476BFF;   /* Electric Sapphire (primary)  */
+  --sapphire-soft: #C2CEFF;
+  --sapphire-dark: #0129CC;
+  --mint:          #53DFA9;   /* Tropical Mint                */
+  --mint-soft:     #DBF9EE;
+  --lime:          #CDE519;   /* Lemon Lime                   */
+
+  /* Semantic aliases used by components */
+  --accent:        var(--sapphire);
+  --panel:         var(--surface);
+  --panel-border:  var(--border);
+  --claim:         #F5512E;   /* attention hue for the "AI SRE hype" corner */
+}
+
+/* Page canvas */
+.slidev-layout {
+  background: var(--bg);
+  color: var(--ink);
+  --slidev-code-font-size: 0.85em;
+}
+
+/* Serif display for the big headers (H1/H2); Radio Canada Big for the rest */
+.slidev-layout h1,
+.slidev-layout h2,
+.font-serif {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.08;
+}
+.slidev-layout h3,
+.slidev-layout h4 { color: var(--ink); letter-spacing: -0.01em; }
+
+/* Cover / section / statement slides also get the cream canvas */
+.slidev-layout.cover,
+.slidev-layout.section,
+.slidev-layout.statement,
+.slidev-layout.center,
+.slidev-layout.full { background: var(--bg); }
+
+/* Long content never overflows the beamer: it scrolls inside its box. */
+.fit-scroll { max-height: 78vh; overflow: auto; }
+
+
+/* "what this chapter covers" list, used inside SectionCard */
+.sc-list { display: flex; flex-direction: column; gap: 0.55rem; }
+.sc-list span {
+  position: relative; padding-left: 1.1rem;
+  font-size: 1.15rem; color: var(--ink-dim);
+}
+.sc-list span::before {
+  content: ''; position: absolute; left: 0; top: 0.55em;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--mint);
+}
+
+.font-hand { font-family: 'Kalam', cursive; }
+
+/* Pill tag (bronto.io hero style) */
+.pill {
+  display: inline-flex; align-items: center; gap: 0.35em;
+  padding: 0.15em 0.7em; border-radius: 999px;
+  font-size: 0.8em; font-weight: 600;
+}
+
+/* Image links (the logo on the title slide) shouldn't get the theme's dashed
+   underline. Needs to out-specify `.slidev-layout a`. */
+.slidev-layout a.brand-logo-link {
+  border-bottom: none;
+  text-decoration: none;
+}
+
+/* Spelled-out URLs on the closing slides. The theme's dashed border-bottom on
+   every <a> reads as damage on a monospace URL, so out-specify it. */
+.slidev-layout a.tl-url,
+.slidev-layout a.wp-url {
+  font-family: 'Geist Mono', monospace;
+  color: var(--sapphire);
+  border-bottom: 1px solid color-mix(in srgb, var(--sapphire) 40%, transparent);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+.slidev-layout a.tl-url:hover,
+.slidev-layout a.wp-url:hover { border-bottom-color: var(--sapphire); }
+.slidev-layout a.tl-url { font-size: 1.05rem; }
+
+/* Small Bronto wordmark used in slide corners */
+.brand-mark {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600; color: var(--ink); opacity: 0.7;
+}
+
+kbd {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 5px; padding: 1px 6px; font-size: 0.85em;
+}
+
+/* ── Deck helpers for this talk ─────────────────────────────────────────── */
+
+.statement-big { font-family: 'Source Serif 4', Georgia, serif; font-size: 2.6rem; line-height: 1.2; max-width: 46rem; margin: 0 auto; }
+.statement-big em { color: var(--sapphire); font-style: normal; }
+.dim { color: var(--ink-dim); }
+
+.cards { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 1rem; margin-top: 1.4rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1rem; }
+.card h3 { margin: 0 0 0.3rem; font-size: 1.05rem; }
+.card p { margin: 0; font-size: 0.9rem; color: var(--ink-dim); line-height: 1.35; }
+.card.ok { border-top: 4px solid var(--mint); }
+.card.new { border-top: 4px solid var(--sapphire); }
+.card.warn { border-top: 4px solid var(--claim); }
+
+/* correlation ladder */
+.ladder { display: flex; flex-direction: column-reverse; gap: 0.55rem; margin-top: 1.2rem; max-width: 44rem; }
+.rung { display: grid; grid-template-columns: 2.2rem 11rem 1fr; align-items: center; gap: 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem 0.9rem; }
+.rung .n { font-family: 'Geist Mono', monospace; color: var(--sapphire); font-weight: 700; }
+.rung .t { font-weight: 700; }
+.rung .d { font-size: 0.88rem; color: var(--ink-dim); }
+
+/* trace waterfall */
+.wf { margin-top: 1.2rem; font-family: 'Geist Mono', monospace; font-size: 0.78rem; }
+.wf-row { display: grid; grid-template-columns: 15rem 1fr; align-items: center; height: 1.55rem; }
+.wf-name { white-space: nowrap; overflow: hidden; }
+.wf-track { position: relative; height: 100%; }
+.wf-bar { position: absolute; top: 0.3rem; height: 0.95rem; border-radius: 3px; background: var(--sapphire-soft); }
+.wf-bar.hot { background: var(--claim); }
+.wf-bar.ext { background: repeating-linear-gradient(45deg, var(--border), var(--border) 4px, var(--surface) 4px, var(--surface) 8px); border: 1px dashed var(--ink-dim); }
+
+/* ── Added for the Nuremberg version ─────────────────────────────────────── */
+
+/* marks slides where we switch to the lab */
+.live-cue {
+  position: absolute; top: 2.2rem; right: 3.5rem;
+  font-family: 'Geist Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  padding: 0.25em 0.8em; border-radius: 999px; background: var(--mint-soft); color: #1E8A5F; border: 1px solid var(--mint);
+}
+
+/* terminal mock */
+.term { margin-top: 1.2rem; border-radius: 12px; overflow: hidden; background: #1F2022; box-shadow: 0 14px 32px rgba(43, 38, 32, 0.18); }
+.term-bar { display: flex; align-items: center; gap: 6px; padding: 0.5rem 0.8rem; background: #2A2B2E; color: #C9C2B6; font-family: 'Geist Mono', monospace; font-size: 0.72rem; }
+.term-bar i { width: 10px; height: 10px; border-radius: 50%; background: #55575C; display: inline-block; }
+.term-bar span { margin-left: 0.6rem; }
+.term pre { margin: 0; padding: 0.9rem 1.1rem 1rem; color: #EDE8DF; font-family: 'Geist Mono', monospace; font-size: 0.82rem; line-height: 1.6; background: transparent; white-space: pre-wrap; }
+.term .p { color: var(--mint); }
+
+/* the thesis */
+.formula { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0.4rem 1rem; font-family: 'Source Serif 4', Georgia, serif; font-size: 3rem; line-height: 1.2; }
+.formula.small { font-size: 1.7rem; }
+.formula .f-op { color: var(--ink-dim); }
+.formula .f-ctx { color: var(--sapphire); font-style: italic; }
+.formula .f-obs { border-bottom: 4px solid var(--mint); }
+
+/* demo map */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-top: 1.4rem; }
+.step { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--mint); border-radius: 12px; padding: 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.step.s0 { border-top-color: var(--sapphire); }
+.step .k { font-family: 'Geist Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-dim); }
+.step h3 { margin: 0; font-size: 1.1rem; }
+.step p { margin: 0; font-size: 0.85rem; color: var(--ink-dim); line-height: 1.35; flex: 1; }
+.step .a { margin-top: 0.4rem; font-family: 'Kalam', cursive; font-size: 1.1rem; color: var(--ink); }
+
+/* code left, notes right */
+.two { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.4rem; align-items: start; margin-top: 0.8rem; }
+.two .slidev-code { font-size: 0.7rem !important; }
+
+/* log line before / after */
+.logline { font-family: 'Geist Mono', monospace; font-size: 0.78rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.logline > div { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.8rem; }
+.logline .ll-old { color: var(--ink-dim); }
+.logline mark { background: var(--lime); color: var(--ink); padding: 0 0.2em; border-radius: 3px; }
+
+/* the full loop */
+.loop { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: 2rem; font-size: 1.1rem; }
+.loop span { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 0.3em 0.9em; }
+.loop i { font-style: normal; color: var(--claim); font-weight: 700; }
+
+.two.trace-right { grid-template-columns: 0.85fr 1.4fr; }
+.small-code .slidev-code { font-size: 0.66rem !important; }
+
+/* incident chat with a handwritten note beside it (slides "Same people, no idea" and "18:16, again") */
+.chat-row { display: flex; align-items: center; gap: 2rem; margin-top: 0.4rem; }
+.chat-row .chat { flex: 0 0 600px; margin: 0; }
+.uu { font-family: 'Kalam', cursive; font-size: 1.9rem; line-height: 1.25; color: var(--claim); opacity: 0; transform: translateX(-10px) rotate(-2deg); transition: all 0.4s ease; }
+.uu.on { opacity: 1; transform: translateX(0) rotate(-2deg); }
+.uu .arrow { display: block; font-size: 2.4rem; }
+
+/* two big cards side by side ("Building the roads…", "What we added…") */
+.build { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 1.4rem; }
+.build .card { padding: 1.1rem 1.3rem; }
+.build .card p { font-size: 1.05rem; color: var(--ink); }
+.bchip { display: inline-block; margin-bottom: 0.7rem; padding: 3px 10px; border-radius: 6px; font-family: 'Geist Mono', monospace; font-size: 0.95rem; font-weight: 600; background: var(--mint); color: var(--ink); }
+.names { display: grid; grid-template-columns: auto auto 1fr; gap: 0.45rem 0.8rem; align-items: center; margin: 1rem 0 0.9rem; font-size: 0.85rem; }
+.names i { font-style: normal; color: var(--ink-dim); }
+.build .tl-url { font-size: 0.75rem; }
+.did { margin: 0.4rem 0 0; padding-left: 1.3rem; font-size: 1.05rem; line-height: 1.6; }
+.build .card .tl-url { font-size: 0.75rem; word-break: break-all; }
+.build .card p.dim { color: var(--ink-dim); }
+.uu.good { color: #1E8A5F; }
+.build .card h4 { margin: 0.7rem 0 0.25rem; font-size: 1rem; font-weight: 700; color: var(--ink); }
+.build .card .bchip + h4 { margin-top: 0.2rem; }
+
+/* caption with a chip in front (villages, lab summary) */
+.vil-cap { margin-top: 0.2rem; text-align: center; font-size: 1.3rem; min-height: 2rem; }
+.vil-cap .chip { font-style: normal; font-family: 'Geist Mono', monospace; font-size: 0.95rem; font-weight: 600; padding: 3px 10px; border-radius: 6px; margin-right: 0.7rem; background: #EFE9DF; color: var(--ink-dim); }
+.vil-cap .chip.add { background: var(--mint); color: var(--ink); }
+.vil-cap .chip.eq { background: var(--sapphire); color: #fff; }
+
+/* code snippets inside the build cards */
+.build > .card { min-width: 0; }
+.snip { margin: 0.6rem 0 0.7rem; padding: 0.55rem 0.7rem; border-radius: 8px; background: #F1ECE3; font-family: 'Geist Mono', monospace; font-size: 0.72rem; line-height: 1.45; white-space: pre; overflow-x: auto; }
+
+/* config diffs: the "roads" and "railway" slides show the real change in the lab */
+.dz { display: grid; gap: 0.9rem; margin-top: 1rem; }
+.dz.two { grid-template-columns: 1.05fr 1fr; align-items: start; margin-top: 0; }
+.slidev-layout > .dz.two { margin-top: 1rem; }
+.dz .stack { display: grid; gap: 0.9rem; min-width: 0; }
+.cfg { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; min-width: 0; }
+.cfg-h { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0.9rem; font-family: 'Geist Mono', monospace; font-size: 0.72rem; color: var(--ink-dim); background: #F1ECE3; border-bottom: 1px solid var(--border); }
+.cfg-h b { color: var(--ink); font-weight: 600; }
+.cfg-f { padding: 0.35rem 0.9rem 0.6rem; font-family: 'Geist Mono', monospace; font-size: 0.72rem; color: var(--ink-dim); }
+.cfg-side { align-self: center; font-size: 1.15rem; line-height: 1.5; }
+.cfg-side .dim { color: var(--ink-dim); }
+.diff { margin: 0; padding: 0.55rem 0; font-family: 'Geist Mono', monospace; font-size: 0.8rem; line-height: 1.75; white-space: pre; overflow: hidden; background: transparent; }
+.diff > span { display: block; padding: 0 0.9rem; }
+.diff .ctx { color: var(--ink-dim); }
+.diff .ctx::before { content: '  '; }
+.diff .add { background: var(--mint-soft); color: var(--ink); }
+.diff .add::before { content: '+ '; color: #1E8A5F; font-weight: 700; }
+.diff b { font-weight: 600; color: var(--ink); }
+.diff.map em { font-style: normal; font-weight: 700; color: var(--sapphire-dark); }
+.logmap { display: flex; flex-wrap: nowrap; align-items: flex-start; gap: 0 0.3rem; padding: 0.8rem 0.9rem 0.7rem; font-family: 'Geist Mono', monospace; white-space: nowrap; overflow: hidden; }
+.logmap .tk { display: inline-flex; flex-direction: column; align-items: center; }
+.logmap .tk + .tk:not(:first-child) { margin-left: 0; }
+.slidev-layout .logmap code { padding: 1px 4px; border-radius: 4px; font-size: 0.8rem; line-height: 1.5; background: var(--sapphire-soft); color: var(--ink); }
+.logmap em { margin-top: 4px; font-style: normal; font-size: 0.7rem; font-weight: 700; color: var(--sapphire-dark); }
+.slidev-layout .logmap .plain code { background: transparent; color: var(--ink-dim); padding: 1px 0; }
+.slidev-layout .logmap .own code, .slidev-layout code.own { background: var(--lime); color: var(--ink); }
+.logmap .own em { color: var(--ink); }
+.dz-note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--ink-dim); }
+.dz-note a { font-size: inherit; }
+
+/* agent videos */
+.slidev-layout.agent-vid { padding: 1.2rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.vid-cue { font-family: 'Geist Mono', monospace; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 0.6rem; }
+.vid-cue.good { color: #1E8A5F; }
+.agent-video { width: 100%; max-height: 88%; border-radius: 10px; box-shadow: 0 2px 14px rgba(0,0,0,.12); }
+/* the video waits for a click to play, but its first frame stays visible */
+.agent-video.slidev-vclick-hidden { opacity: 1 !important; pointer-events: none; }

@@ -1,0 +1,38 @@
+# The classic lab's log shipper: tail the log files, split the line into fields, send it to OpenSearch.
+# <time> <host> <app>[<version>]: <LEVEL> key=value key=value ...
+service:
+  flush: 1
+  log_level: warn
+  parsers_file: parsers.yaml
+
+pipeline:
+  inputs:
+    - name: tail
+      path: /var/log/transit/*/*.log
+      db: /var/lib/fluent-bit/tail.db
+      refresh_interval: 2
+      tag: transit
+  filters:
+    - name: parser          # the line -> time, host, app, version, level, kv (keep the line as "message")
+      match: '*'
+      key_name: log
+      parser: transit_line
+      preserve_key: on
+      reserve_data: on
+    - name: parser          # key=value pairs -> fields
+      match: '*'
+      key_name: kv
+      parser: key_value
+      reserve_data: on
+    - name: modify
+      match: '*'
+      rename: log message
+  outputs:
+    - name: opensearch
+      match: '*'
+      host: opensearch
+      port: 9200
+      logstash_format: on
+      logstash_prefix: classic-logs
+      suppress_type_name: on
+      trace_error: on

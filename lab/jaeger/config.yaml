@@ -1,0 +1,35 @@
+# Jaeger v2 for the enriched lab's trace waterfall. The Collector sends it the spans (OTLP); they are also in
+# OpenSearch. In memory: the last 40000 traces (about 15 min of the lab's traffic).
+service:
+  extensions: [jaeger_storage, jaeger_query, healthcheckv2]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [jaeger_storage_exporter]
+  telemetry:
+    logs: { level: info }
+
+extensions:
+  healthcheckv2:
+    use_v2: true
+    http: { endpoint: 0.0.0.0:13133 }
+  jaeger_query:
+    storage: { traces: lab_store }
+    ui: { config_file: /etc/jaeger/ui.json }
+  jaeger_storage:
+    backends:
+      lab_store:
+        memory: { max_traces: 40000 }
+
+receivers:
+  otlp:
+    protocols:
+      grpc: { endpoint: 0.0.0.0:4317 }
+
+processors:
+  batch:
+
+exporters:
+  jaeger_storage_exporter:
+    trace_storage: lab_store

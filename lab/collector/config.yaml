@@ -1,0 +1,75 @@
+# The Collector in the enriched lab: the same log files as the classic lab, plus the apps' traces.
+# Same names on both signals: service.name, service.version, host.name, deployment.environment.name (resource),
+# OpenTelemetry semantic conventions for the fields parsed from the log line, the same trace id field.
+#   log files (file_log) ─┐
+#   apps' traces (OTLP) ──┴─▶ OpenSearch (enriched-logs-*, enriched-spans-*)    traces also ─▶ Jaeger
+extensions:
+  file_storage: { directory: /var/lib/otelcol, create_directory: true }   # read positions in the log files
+
+receivers:
+  otlp:
+    protocols:
+      http: { endpoint: 0.0.0.0:4318 }
+  file_log:
+    include: [/var/log/transit/*/*.log]
+    storage: file_storage
+    operators:   # <time> <host> <app>[<version>]: <LEVEL> key=value ... trace_id=... span_id=...
+      - type: regex_parser
+        regex: '^(?P<time>\S+) (?P<host>\S+) (?P<app>[\w-]+)\[(?P<version>[^\]]+)\]: (?P<level>\w+) (?P<kv>.*)$'
+        timestamp: { parse_from: attributes.time, layout_type: gotime, layout: '2006-01-02T15:04:05.000Z' }
+        severity: { parse_from: attributes.level }
+      - type: key_value_parser
+        parse_from: attributes.kv
+      # who wrote the line: the same resource attributes the apps put on their spans
+      - { type: move, from: attributes.host,    to: 'resource["host.name"]' }
+      - { type: move, from: attributes.app,     to: 'resource["service.name"]' }
+      - { type: move, from: attributes.version, to: 'resource["service.version"]' }
+
+processors:
+  transform/logs:
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["deployment.environment.name"], "production")
+      - context: log
+        statements:
+          # the line's fields under their semantic-convention names
+          - set(attributes["http.request.method"], attributes["method"]) where attributes["method"] != nil
+          - set(attributes["url.path"], attributes["path"]) where attributes["path"] != nil
+          - set(attributes["http.response.status_code"], Int(attributes["status"])) where attributes["status"] != nil
+          - set(attributes["event.name"], attributes["event"]) where attributes["event"] != nil
+          - set(attributes["duration_ms"], Int(attributes["duration_ms"])) where attributes["duration_ms"] != nil
+          - set(attributes["stops_api_ms"], Int(attributes["stops_api_ms"])) where attributes["stops_api_ms"] != nil
+          # trace_id/span_id at the end of the line: the log record's trace context
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil and attributes["trace_id"] != "0"
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil and attributes["span_id"] != "0"
+          - delete_matching_keys(attributes, "^(time|level|kv|method|path|status|event|trace_id|span_id)$")
+  transform/spans:
+    trace_statements:
+      - context: span
+        statements:
+          - set(attributes["duration_ms"], (end_time_unix_nano - start_time_unix_nano) / 1000000)
+  filter/jaeger:   # Jaeger is for the waterfall: leave out the single-span traces of website/ticket machine calls
+    traces:
+      span: ['resource.attributes["service.name"] == "stops-api" and IsRootSpan()']
+  batch:
+
+exporters:
+  opensearch/logs:
+    http: { endpoint: http://opensearch:9200 }
+    logs_index: enriched-logs
+    logs_index_time_format: yyyy.MM.dd
+  opensearch/spans:
+    http: { endpoint: http://opensearch:9200 }
+    traces_index: enriched-spans
+    traces_index_time_format: yyyy.MM.dd
+  otlp_grpc/jaeger:
+    endpoint: jaeger:4317
+    tls: { insecure: true }
+
+service:
+  extensions: [file_storage]
+  pipelines:
+    logs:              { receivers: [file_log], processors: [transform/logs, batch], exporters: [opensearch/logs] }
+    traces/opensearch: { receivers: [otlp], processors: [transform/spans, batch], exporters: [opensearch/spans] }
+    traces/jaeger:     { receivers: [otlp], processors: [filter/jaeger, batch],   exporters: [otlp_grpc/jaeger] }

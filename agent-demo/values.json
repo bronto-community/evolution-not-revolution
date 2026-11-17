@@ -1,0 +1,467 @@
+{
+  "_about": "Real values from the lab incident of 17 Nov 2026 (JourneyApp 5.0 rollout at 11:59:15, alert 12:03:06), mapped onto the story clock (real + 6h13m: alert 18:16, agent runs ~18:24). Collected read-only from OpenSearch; referenced from scenes.json as {{key}}.",
+  "alert_time": {
+    "value": "18:16",
+    "about": "alert fired (real 12:03:06; story clock = real + 6h13m)"
+  },
+  "incident_start": {
+    "value": "18:15",
+    "about": "when /departures latency went up (first 3m bucket with high p50, story clock)"
+  },
+  "fallback_count": {
+    "value": "8,748",
+    "about": "classic: served_from_timetable lines in the last 15 min"
+  },
+  "first_fallback": {
+    "value": "18:12:41",
+    "about": "classic: first served_from_timetable line in that window (story clock)"
+  },
+  "hit1_ts": {
+    "value": "18:23:59.910",
+    "about": "classic sample fallback line 1: timestamp (story clock)"
+  },
+  "stop1": {
+    "value": "fuerth-hauptbahnhof",
+    "about": "classic sample fallback line 1: stop"
+  },
+  "hit1_stops_ms": {
+    "value": "600",
+    "about": "classic sample fallback line 1: stops_api_ms"
+  },
+  "hit2_ts": {
+    "value": "18:23:59.908",
+    "about": "classic sample fallback line 2: timestamp (story clock)"
+  },
+  "stop2": {
+    "value": "friedrich-ebert-platz",
+    "about": "classic sample fallback line 2: stop"
+  },
+  "hit2_stops_ms": {
+    "value": "815",
+    "about": "classic sample fallback line 2: stops_api_ms"
+  },
+  "hit3_ts": {
+    "value": "18:23:59.696",
+    "about": "classic sample fallback line 3: timestamp (story clock)"
+  },
+  "stop3": {
+    "value": "rathenauplatz",
+    "about": "classic sample fallback line 3: stop"
+  },
+  "hit3_stops_ms": {
+    "value": "1013",
+    "about": "classic sample fallback line 3: stops_api_ms"
+  },
+  "dep_count_0": {
+    "value": "8,248",
+    "about": "classic departures-api /departures requests in bucket 18:09"
+  },
+  "dep_p50_0": {
+    "value": "9",
+    "about": "... duration_ms p50, bucket 18:09"
+  },
+  "dep_p95_0": {
+    "value": "45",
+    "about": "... duration_ms p95, bucket 18:09"
+  },
+  "dep_count_1": {
+    "value": "8,162",
+    "about": "classic departures-api /departures requests in bucket 18:12"
+  },
+  "dep_p50_1": {
+    "value": "13",
+    "about": "... duration_ms p50, bucket 18:12"
+  },
+  "dep_p95_1": {
+    "value": "335",
+    "about": "... duration_ms p95, bucket 18:12"
+  },
+  "dep_count_2": {
+    "value": "7,649",
+    "about": "classic departures-api /departures requests in bucket 18:15"
+  },
+  "dep_p50_2": {
+    "value": "400",
+    "about": "... duration_ms p50, bucket 18:15"
+  },
+  "dep_p95_2": {
+    "value": "1,471",
+    "about": "... duration_ms p95, bucket 18:15"
+  },
+  "dep_count_3": {
+    "value": "7,543",
+    "about": "classic departures-api /departures requests in bucket 18:18"
+  },
+  "dep_p50_3": {
+    "value": "465",
+    "about": "... duration_ms p50, bucket 18:18"
+  },
+  "dep_p95_3": {
+    "value": "1,670",
+    "about": "... duration_ms p95, bucket 18:18"
+  },
+  "dep_count_4": {
+    "value": "7,421",
+    "about": "classic departures-api /departures requests in bucket 18:21"
+  },
+  "dep_p50_4": {
+    "value": "459",
+    "about": "... duration_ms p50, bucket 18:21"
+  },
+  "dep_p95_4": {
+    "value": "2,207",
+    "about": "... duration_ms p95, bucket 18:21"
+  },
+  "fb_count_6m": {
+    "value": "6,072",
+    "about": "classic fallback lines in the last 6 min"
+  },
+  "fb_stops_p50": {
+    "value": "738",
+    "about": "their stops_api_ms p50"
+  },
+  "fb_stops_p95": {
+    "value": "2,158",
+    "about": "their stops_api_ms p95"
+  },
+  "stops_rps_0": {
+    "value": "101",
+    "about": "classic stops-api requests/s in bucket 18:09 (its own log lines)"
+  },
+  "stops_p50_0": {
+    "value": "8",
+    "about": "... duration_ms p50, bucket 18:09"
+  },
+  "stops_p95_0": {
+    "value": "52",
+    "about": "... duration_ms p95, bucket 18:09"
+  },
+  "stops_rps_1": {
+    "value": "138",
+    "about": "classic stops-api requests/s in bucket 18:12 (its own log lines)"
+  },
+  "stops_p50_1": {
+    "value": "34",
+    "about": "... duration_ms p50, bucket 18:12"
+  },
+  "stops_p95_1": {
+    "value": "52",
+    "about": "... duration_ms p95, bucket 18:12"
+  },
+  "stops_rps_2": {
+    "value": "191",
+    "about": "classic stops-api requests/s in bucket 18:15 (its own log lines)"
+  },
+  "stops_p50_2": {
+    "value": "43",
+    "about": "... duration_ms p50, bucket 18:15"
+  },
+  "stops_p95_2": {
+    "value": "53",
+    "about": "... duration_ms p95, bucket 18:15"
+  },
+  "stops_rps_3": {
+    "value": "191",
+    "about": "classic stops-api requests/s in bucket 18:18 (its own log lines)"
+  },
+  "stops_p50_3": {
+    "value": "43",
+    "about": "... duration_ms p50, bucket 18:18"
+  },
+  "stops_p95_3": {
+    "value": "53",
+    "about": "... duration_ms p95, bucket 18:18"
+  },
+  "stops_rps_4": {
+    "value": "185",
+    "about": "classic stops-api requests/s in bucket 18:21 (its own log lines)"
+  },
+  "stops_p50_4": {
+    "value": "43",
+    "about": "... duration_ms p50, bucket 18:21"
+  },
+  "stops_p95_4": {
+    "value": "53",
+    "about": "... duration_ms p95, bucket 18:21"
+  },
+  "stops_ratio": {
+    "value": "1.8",
+    "about": "classic stops-api rate, last bucket vs first"
+  },
+  "version": {
+    "value": "3.1.0",
+    "about": "departures-api version (the only one in the last 24 h)"
+  },
+  "host": {
+    "value": "departures-01",
+    "about": "departures-api host"
+  },
+  "fallback_count_enr": {
+    "value": "9,736",
+    "about": "enriched: served_from_timetable log records in the last 15 min"
+  },
+  "first_fallback_enr": {
+    "value": "18:10:30",
+    "about": "enriched: first one in that window (story clock)"
+  },
+  "ehit1_ts": {
+    "value": "18:23:47.696",
+    "about": "enriched sample fallback line 1 timestamp (story clock)"
+  },
+  "estop1": {
+    "value": "aufsessplatz",
+    "about": "its stop"
+  },
+  "ehit1_stops_ms": {
+    "value": "983",
+    "about": "its stops_api_ms"
+  },
+  "ehit2_ts": {
+    "value": "18:23:47.690",
+    "about": "enriched sample fallback line 2 timestamp"
+  },
+  "estop2": {
+    "value": "weisser-turm",
+    "about": "its stop"
+  },
+  "ehit2_stops_ms": {
+    "value": "2706",
+    "about": "its stops_api_ms"
+  },
+  "trace_board": {
+    "value": "b85177bc5fa282ea786e5b9c18136f3e",
+    "about": "trace id of the slow board request the agent opens (from fallback line 1)"
+  },
+  "trace_board2": {
+    "value": "a8de269e3d2708dca90e2f313cc22c88",
+    "about": "trace id on fallback line 2"
+  },
+  "board_ua": {
+    "value": "departure-board/3.2 (station=aufsessplatz; display=3)",
+    "about": "its user_agent.original"
+  },
+  "board_query": {
+    "value": "stop=aufsessplatz",
+    "about": "its url.query"
+  },
+  "board_total_ms": {
+    "value": "984",
+    "about": "its server span"
+  },
+  "board_client_ms": {
+    "value": "982",
+    "about": "departures-api client span to stops-api"
+  },
+  "board_server_ms": {
+    "value": "6",
+    "about": "stops-api server span"
+  },
+  "board_wait_ms": {
+    "value": "976",
+    "about": "client minus server: waiting for a pool connection"
+  },
+  "window": {
+    "value": "18:22:00–18:23:55",
+    "about": "the last-2-minutes window (story clock)"
+  },
+  "win_traces": {
+    "value": "4,725",
+    "about": "departures-api GET /departures traces in it"
+  },
+  "wtop1_id": {
+    "value": "43969c8",
+    "about": "top-1 trace by span count: short id"
+  },
+  "wtop1_spans": {
+    "value": "53",
+    "about": "its spans"
+  },
+  "wtop1_ms": {
+    "value": "1,325",
+    "about": "its duration"
+  },
+  "wtop1_ua": {
+    "value": "  JourneyApp/5.0.0 (Android 15; Pixel 8)",
+    "about": "its user_agent.original"
+  },
+  "wtop1_query": {
+    "value": "stop=roethenbach&include=route",
+    "about": "its url.query"
+  },
+  "wtop2_id": {
+    "value": "81d888c",
+    "about": "top-2 trace by span count: short id"
+  },
+  "wtop2_spans": {
+    "value": "53",
+    "about": "its spans"
+  },
+  "wtop2_ms": {
+    "value": "1,487",
+    "about": "its duration"
+  },
+  "wtop2_ua": {
+    "value": "  JourneyApp/5.0.0 (iOS 19.1; iPhone16,2)",
+    "about": "its user_agent.original"
+  },
+  "wtop2_query": {
+    "value": "stop=hauptbahnhof&include=route",
+    "about": "its url.query"
+  },
+  "wtop3_id": {
+    "value": "5b244d2",
+    "about": "top-3 trace by span count: short id"
+  },
+  "wtop3_spans": {
+    "value": "53",
+    "about": "its spans"
+  },
+  "wtop3_ms": {
+    "value": "1,448",
+    "about": "its duration"
+  },
+  "wtop3_ua": {
+    "value": "  JourneyApp/5.0.0 (iOS 19.1; iPhone16,2)",
+    "about": "its user_agent.original"
+  },
+  "wtop3_query": {
+    "value": "stop=langwasser-sued&include=route",
+    "about": "its url.query"
+  },
+  "wtop4_id": {
+    "value": "24a33ab",
+    "about": "top-4 trace by span count: short id"
+  },
+  "wtop4_spans": {
+    "value": "53",
+    "about": "its spans"
+  },
+  "wtop4_ms": {
+    "value": "1,097",
+    "about": "its duration"
+  },
+  "wtop4_ua": {
+    "value": "  JourneyApp/5.0.0 (iOS 19.1; iPhone16,2)",
+    "about": "its user_agent.original"
+  },
+  "wtop4_query": {
+    "value": "stop=nordwestring&include=route",
+    "about": "its url.query"
+  },
+  "wtop5_id": {
+    "value": "98197c8",
+    "about": "top-5 trace by span count: short id"
+  },
+  "wtop5_spans": {
+    "value": "53",
+    "about": "its spans"
+  },
+  "wtop5_ms": {
+    "value": "1,151",
+    "about": "its duration"
+  },
+  "wtop5_ua": {
+    "value": "  JourneyApp/5.0.0 (iOS 18.6; iPhone15,3)",
+    "about": "its user_agent.original"
+  },
+  "wtop5_query": {
+    "value": "stop=bauernfeindstrasse&include=route",
+    "about": "its url.query"
+  },
+  "win_big": {
+    "value": "460",
+    "about": "traces with > 5 spans (all JourneyApp/5.0.0 include=route)"
+  },
+  "win_small": {
+    "value": "4,265",
+    "about": "traces with 3 spans"
+  },
+  "win_board": {
+    "value": "1,135",
+    "about": "... of them boards"
+  },
+  "win_j4": {
+    "value": "3,130",
+    "about": "... of them JourneyApp/4.0.7"
+  },
+  "trace_journey": {
+    "value": "43969c8ffb7fdba3eb7fe756246aa733",
+    "about": "the JourneyApp/5.0.0 trace the agent opens (top of the list)"
+  },
+  "journey_spans": {
+    "value": "53",
+    "about": "spans in it"
+  },
+  "journey_calls": {
+    "value": "26",
+    "about": "client calls to stops-api in it"
+  },
+  "journey_ua": {
+    "value": "JourneyApp/5.0.0 (Android 15; Pixel 8)",
+    "about": "its user agent"
+  },
+  "journey_query": {
+    "value": "stop=roethenbach&include=route",
+    "about": "its url.query"
+  },
+  "journey_total_ms": {
+    "value": "1,325",
+    "about": "its duration"
+  },
+  "journey_client_range": {
+    "value": "39–980",
+    "about": "client span durations (ms)"
+  },
+  "journey_server_range": {
+    "value": "5–55",
+    "about": "stops-api server span durations (ms)"
+  },
+  "journey5_first_seen": {
+    "value": "18:12",
+    "about": "first JourneyApp/5.0.0 request (story clock)"
+  },
+  "j5_n_0": {
+    "value": "0",
+    "about": "JourneyApp/5.0.0 requests in bucket 18:09"
+  },
+  "j5_route_0": {
+    "value": "–",
+    "about": "... share with include=route"
+  },
+  "j5_n_1": {
+    "value": "294",
+    "about": "JourneyApp/5.0.0 requests in bucket 18:12"
+  },
+  "j5_route_1": {
+    "value": "100%",
+    "about": "... share with include=route"
+  },
+  "j5_n_2": {
+    "value": "705",
+    "about": "JourneyApp/5.0.0 requests in bucket 18:15"
+  },
+  "j5_route_2": {
+    "value": "100%",
+    "about": "... share with include=route"
+  },
+  "j5_n_3": {
+    "value": "722",
+    "about": "JourneyApp/5.0.0 requests in bucket 18:18"
+  },
+  "j5_route_3": {
+    "value": "100%",
+    "about": "... share with include=route"
+  },
+  "j5_n_4": {
+    "value": "700",
+    "about": "JourneyApp/5.0.0 requests in bucket 18:21"
+  },
+  "j5_route_4": {
+    "value": "100%",
+    "about": "... share with include=route"
+  },
+  "stops_ratio_enr": {
+    "value": "1.9",
+    "about": "enriched stops-api server spans, last bucket vs first"
+  }
+}

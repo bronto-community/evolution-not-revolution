@@ -1,0 +1,8 @@
+{
+  "name": "agent-demo-recording",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "playwright-chromium": "1.64.1"
+  }
+}

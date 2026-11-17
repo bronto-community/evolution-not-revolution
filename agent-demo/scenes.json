@@ -1,0 +1,198 @@
+{
+ "classic": {
+  "label": "classic lab: log lines in OpenSearch",
+  "prompt": "The departure boards alert fired: boards falling back to the timetable since 18:16. Find out why.",
+  "turns": [
+   [
+    {
+     "text": "Starting with the fallback events on departures-api.",
+     "wait": 2.5
+    },
+    {
+     "tool": "mcp__opensearch__search_logs",
+     "input": {
+      "index": "classic-logs",
+      "query": "app:departures-api AND event:served_from_timetable",
+      "from": "now-15m",
+      "size": 3
+     },
+     "result": "{{fallback_count}} hits, first at {{first_fallback}}, showing 3\n{{hit1_ts}} WARNING event=served_from_timetable stop={{stop1}} reason=live_data_late stops_api_ms={{hit1_stops_ms}}\n{{hit2_ts}} WARNING event=served_from_timetable stop={{stop2}} reason=live_data_late stops_api_ms={{hit2_stops_ms}}\n{{hit3_ts}} WARNING event=served_from_timetable stop={{stop3}} reason=live_data_late stops_api_ms={{hit3_stops_ms}}"
+    }
+   ],
+   [
+    {
+     "text": "The boards get the timetable because live data is late, and the lines put the time on the call to stops-api. How long do /departures requests take, and how long is that call?"
+    },
+    {
+     "tool": "mcp__opensearch__field_stats",
+     "input": {
+      "index": "classic-logs",
+      "query": "app:departures-api AND path:\"/departures\"",
+      "field": "duration_ms",
+      "stats": [
+       "count",
+       "p50",
+       "p95"
+      ],
+      "interval": "3m",
+      "from": "now-15m"
+     },
+     "result": "duration_ms, 3m buckets\ntime      count  p50 ms  p95 ms\n18:09  {{dep_count_0:>8}}{{dep_p50_0:>8}}{{dep_p95_0:>8}}\n18:12  {{dep_count_1:>8}}{{dep_p50_1:>8}}{{dep_p95_1:>8}}\n18:15  {{dep_count_2:>8}}{{dep_p50_2:>8}}{{dep_p95_2:>8}}\n18:18  {{dep_count_3:>8}}{{dep_p50_3:>8}}{{dep_p95_3:>8}}\n18:21  {{dep_count_4:>8}}{{dep_p50_4:>8}}{{dep_p95_4:>8}}"
+    },
+    {
+     "tool": "mcp__opensearch__field_stats",
+     "input": {
+      "index": "classic-logs",
+      "query": "app:departures-api AND event:served_from_timetable",
+      "field": "stops_api_ms",
+      "stats": [
+       "count",
+       "p50",
+       "p95"
+      ],
+      "from": "now-6m"
+     },
+     "result": "stops_api_ms, last 6m\n   count  p50 ms  p95 ms\n{{fb_count_6m:>8}}{{fb_stops_p50:>8}}{{fb_stops_p95:>8}}"
+    }
+   ],
+   [
+    {
+     "text": "Requests went from ~{{dep_p50_0}} ms to ~{{dep_p50_4}} ms at p50 with the same number of requests, and on the fallback lines departures-api says the stops-api call took {{fb_stops_p50}} ms (p50), up to {{fb_stops_p95}} ms (p95). What does stops-api see on its side?"
+    },
+    {
+     "tool": "mcp__opensearch__field_stats",
+     "input": {
+      "index": "classic-logs",
+      "query": "app:stops-api",
+      "field": "duration_ms",
+      "stats": [
+       "rate",
+       "p50",
+       "p95"
+      ],
+      "interval": "3m",
+      "from": "now-15m"
+     },
+     "result": "duration_ms, 3m buckets\ntime      req/s  p50 ms  p95 ms\n18:09  {{stops_rps_0:>8}}{{stops_p50_0:>8}}{{stops_p95_0:>8}}\n18:12  {{stops_rps_1:>8}}{{stops_p50_1:>8}}{{stops_p95_1:>8}}\n18:15  {{stops_rps_2:>8}}{{stops_p50_2:>8}}{{stops_p95_2:>8}}\n18:18  {{stops_rps_3:>8}}{{stops_p50_3:>8}}{{stops_p95_3:>8}}\n18:21  {{stops_rps_4:>8}}{{stops_p50_4:>8}}{{stops_p95_4:>8}}"
+    }
+   ],
+   [
+    {
+     "text": "By its own logs stops-api answers within ~{{stops_p95_4}} ms (p95), nowhere near {{fb_stops_p50}} ms. Its traffic is up about {{stops_ratio}}x ({{stops_rps_0}} to {{stops_rps_4}} req/s), which on its own isn't alarming at rush hour. Checking for errors and for a change on our side."
+    },
+    {
+     "tool": "mcp__opensearch__field_stats",
+     "input": {
+      "index": "classic-logs",
+      "query": "level:ERROR OR status:>=500",
+      "field": "app",
+      "from": "now-2h"
+     },
+     "result": "0 matching log lines"
+    },
+    {
+     "tool": "mcp__opensearch__field_stats",
+     "input": {
+      "index": "classic-logs",
+      "query": "app:departures-api",
+      "field": "version",
+      "from": "now-24h"
+     },
+     "result": "version   share   host\n{{version:<10}}100%    {{host}}"
+    }
+   ],
+   [
+    {
+     "text": "**What the logs show**\n- Since about {{incident_start}}, /departures requests take ~{{dep_p50_4}} ms at p50 (p95 {{dep_p95_4}} ms) instead of ~{{dep_p50_0}} ms, at the same request count. departures-api logs the stops-api call at {{fb_stops_p50}} ms (p50) on the fallback lines.\n- stops-api handles its requests within ~{{stops_p95_4}} ms (p95) by its own logs. Its traffic is up ~{{stops_ratio}}x; its logs don't say from whom.\n- No errors, all 200s, departures-api {{version}} on {{host}}, the only version in the last 24 h.\n\n**What I can't tell from this data**\nThe ~{{fb_stops_p50}} ms are lost between departures-api and stops-api, not inside stops-api. Possible causes: the network, a load balancer in between, how departures-api handles its connections, or another client loading stops-api. The logs can't separate these: no request id links a departures-api line to the stops-api line it caused, and there are no query strings or client details.\n\n**To go further I'd need** traces across both services (or at least a shared request id in the logs), and who is calling departures-api and stops-api, with which parameters."
+    }
+   ]
+  ]
+ },
+ "enriched": {
+  "label": "enriched lab: logs + traces, OTel semantic conventions",
+  "prompt": "The departure boards alert fired: boards falling back to the timetable since 18:16. Find out why.",
+  "turns": [
+   [
+    {
+     "text": "Starting with the fallback events on departures-api.",
+     "wait": 2.5
+    },
+    {
+     "tool": "mcp__opensearch__search_logs",
+     "input": {
+      "index": "enriched-logs",
+      "query": "resource.service.name:departures-api AND attributes.event.name:served_from_timetable",
+      "from": "now-15m",
+      "size": 2
+     },
+     "result": "{{fallback_count_enr}} hits, first at {{first_fallback_enr}}, showing 2\n{{ehit1_ts}} WARNING stop={{estop1}} stops_api_ms={{ehit1_stops_ms}} traceId={{trace_board}}\n{{ehit2_ts}} WARNING stop={{estop2}} stops_api_ms={{ehit2_stops_ms}} traceId={{trace_board2}}"
+    }
+   ],
+   [
+    {
+     "text": "Live data arrives too late. The log lines carry a traceId, so I can open the request behind the first one."
+    },
+    {
+     "tool": "mcp__opensearch__get_trace",
+     "input": {
+      "trace_id": "{{trace_board}}"
+     },
+     "result": "trace {{trace_board}}  {{board_total_ms}} ms\ndepartures-api      GET /departures                 server  {{board_total_ms:>5}} ms\n│     user_agent.original={{board_ua}}\n│     url.query={{board_query}}\n└─ departures-api   GET                             client  {{board_client_ms:>5}} ms\n   └─ stops-api     GET /stops/<stop_id>/platforms  server  {{board_server_ms:>5}} ms"
+    }
+   ],
+   [
+    {
+     "text": "The client span to stops-api takes {{board_client_ms}} ms, but stops-api itself needs {{board_server_ms}} ms. So ~{{board_wait_ms}} ms pass inside departures-api before the call goes out: it is waiting for one of the 5 connections in its pool to stops-api. Who holds the connections? Searching the last 2 minutes of departures-api traces, most spans first."
+    },
+    {
+     "tool": "mcp__opensearch__search_traces",
+     "hold": true,
+     "input": {
+      "service": "departures-api",
+      "operation": "GET /departures",
+      "from": "now-2m",
+      "sort": "spans:desc",
+      "limit": 5
+     },
+     "result": "{{win_traces}} traces {{window}}, top 5 by span count\ntrace    spans     ms  user_agent.original                       url.query\n{{wtop1_id:<9}}{{wtop1_spans:>5}}{{wtop1_ms:>7}}{{wtop1_ua:<44}}{{wtop1_query:<30}}\n{{wtop2_id:<9}}{{wtop2_spans:>5}}{{wtop2_ms:>7}}{{wtop2_ua:<44}}{{wtop2_query:<30}}\n{{wtop3_id:<9}}{{wtop3_spans:>5}}{{wtop3_ms:>7}}{{wtop3_ua:<44}}{{wtop3_query:<30}}\n{{wtop4_id:<9}}{{wtop4_spans:>5}}{{wtop4_ms:>7}}{{wtop4_ua:<44}}{{wtop4_query:<30}}\n{{wtop5_id:<9}}{{wtop5_spans:>5}}{{wtop5_ms:>7}}{{wtop5_ua:<44}}{{wtop5_query:<30}}\n…\nmore than 5 spans: {{win_big}} traces, all JourneyApp/5.0.0 with include=route\n3 spans: {{win_small}} traces (departure-board/3.2: {{win_board}}, JourneyApp/4.0.7: {{win_j4}})"
+    }
+   ],
+   [
+    {
+     "text": "The top traces are all JourneyApp/5.0.0 with include=route and ~{{journey_spans}} spans; boards and JourneyApp/4.0.7 have 3. Opening the first one:"
+    },
+    {
+     "tool": "mcp__opensearch__get_trace",
+     "input": {
+      "trace_id": "{{trace_journey}}"
+     },
+     "result": "trace {{trace_journey}}  {{journey_total_ms}} ms\ndepartures-api      GET /departures                 server  {{journey_total_ms:>5}} ms\n│     user_agent.original={{journey_ua}}\n│     url.query={{journey_query}}\n└─ departures-api   GET                             client  ×{{journey_calls}} in parallel, {{journey_client_range}} ms\n   └─ stops-api     GET /stops/<stop_id>[/…]        server  ×{{journey_calls}}, {{journey_server_range}} ms"
+    }
+   ],
+   [
+    {
+     "text": "One request, {{journey_calls}} parallel calls to stops-api, all through the same 5 connections. When did JourneyApp/5.0.0 show up?"
+    },
+    {
+     "tool": "mcp__opensearch__field_stats",
+     "input": {
+      "index": "enriched-spans",
+      "query": "resource.service.name:departures-api AND kind:Server AND attributes.user_agent.original:JourneyApp/5.0.0*",
+      "field": "attributes.url.query",
+      "stats": [
+       "count"
+      ],
+      "interval": "3m",
+      "from": "now-15m"
+     },
+     "result": "first seen {{journey5_first_seen}}, 3m buckets\ntime    requests   with include=route\n18:09  {{j5_n_0:>9}}{{j5_route_0:>21}}\n18:12  {{j5_n_1:>9}}{{j5_route_1:>21}}\n18:15  {{j5_n_2:>9}}{{j5_route_2:>21}}\n18:18  {{j5_n_3:>9}}{{j5_route_3:>21}}\n18:21  {{j5_n_4:>9}}{{j5_route_4:>21}}"
+    }
+   ],
+   [
+    {
+     "text": "**Root cause:** the JourneyApp 5.0 rollout (another company's app, first seen {{journey5_first_seen}}). It polls the same endpoint as 4.0 but adds `include=route`, so departures-api makes {{journey_calls}} calls to stops-api in parallel for each of those requests. They take the 5 connections in the pool; board requests wait ~{{board_wait_ms}} ms for a free one, miss the 500 ms live-data budget and get the timetable.\n\n**Evidence**\n- Board request `{{trace_board}}`: client span to stops-api {{board_client_ms}} ms, stops-api server span {{board_server_ms}} ms.\n- Last 2 minutes: all {{win_big}} departures-api traces with more than 5 spans are JourneyApp/5.0.0 with include=route (~{{journey_spans}} spans, e.g. `{{trace_journey}}`); boards and 4.0.7 have 3.\n- stops-api is not the bottleneck: its server spans take {{journey_server_range}} ms, its traffic is up only ~{{stops_ratio_enr}}x.\n\n**Mitigation**\n- Now: raise the pool above 5, or give include=route its own, capped pool, so board requests always get a connection.\n- Then: cap include=route on our side (route stops per request, rate) and talk to the JourneyApp vendor."
+    }
+   ]
+  ]
+ }
+}

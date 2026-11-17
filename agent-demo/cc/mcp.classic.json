@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "opensearch": {
+      "type": "stdio",
+      "command": "python3",
+      "args": ["-I", "@DEMO_DIR@/fake_mcp.py", "classic"]
+    }
+  }
+}

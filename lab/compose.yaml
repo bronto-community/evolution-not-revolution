@@ -1,0 +1,36 @@
+# One lab: our departures-api and the network data team's stops-api. Both labs start from this file:
+#   transit-classic:  compose.yaml + compose.classic.yaml   (+ Fluent Bit ships the log files)
+#   transit-enriched: compose.yaml + compose.enriched.yaml  (+ injector, trace_id in the log line, Collector)
+# scripts/lab.sh runs compose with the right files and env/<lab>.env.
+x-app: &app
+  volumes: ["./logs/${LAB}:/var/log/transit"]   # the central log bucket
+  restart: unless-stopped
+  mem_limit: 256m
+  healthcheck:
+    test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/localhost/$$PORT && printf 'GET /health HTTP/1.0\r\n\r\n' >&3 && grep -q ok <&3"]
+    interval: 30s
+    start_period: 60s
+    start_interval: 2s
+    retries: 3
+
+services:
+  departures-api:
+    <<: *app
+    image: transit-lab/departures-api:3.1.0
+    hostname: departures-01
+    command: python departures_api.py
+    environment:
+      PORT: "8000"
+      STOPS_API_POOL_SIZE: ${STOPS_API_POOL_SIZE:-5}   # `make fix` raises it
+    ports: ["127.0.0.1:${DEPARTURES_PORT}:8000"]
+
+  stops-api:
+    <<: *app
+    image: transit-lab/stops-api:1.8.2
+    hostname: stops-01
+    command: python stops_api.py
+    environment: { PORT: "8001" }
+    ports: ["127.0.0.1:${STOPS_PORT}:8001"]
+
+networks:
+  shared: { name: transit-shared, external: true }   # OpenSearch, Jaeger (compose.shared.yaml)

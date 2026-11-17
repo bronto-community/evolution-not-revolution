@@ -1,0 +1,15 @@
+# The classic lab: the log files go to OpenSearch through a classic log shipper. No traces, no OpenTelemetry.
+services:
+  fluent-bit:
+    image: fluent/fluent-bit:5.1.5
+    command: [/fluent-bit/bin/fluent-bit, -c, /fluent-bit/etc/fluent-bit.yaml]
+    volumes:
+      - ./fluent-bit:/fluent-bit/etc:ro
+      - ./logs/classic:/var/log/transit:ro    # read the central log bucket
+      - fluent-bit:/var/lib/fluent-bit         # read positions
+    networks: [default, shared]
+    restart: unless-stopped
+    mem_limit: 128m
+
+volumes:
+  fluent-bit:

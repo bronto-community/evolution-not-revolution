@@ -1,0 +1,9 @@
+parsers:
+  - name: transit_line
+    format: regex
+    regex: '^(?<time>\S+) (?<host>\S+) (?<app>[\w-]+)\[(?<version>[^\]]+)\]: (?<level>\w+) (?<kv>.*)$'
+    time_key: time
+    time_format: '%Y-%m-%dT%H:%M:%S.%LZ'
+  - name: key_value
+    format: logfmt
+    types: duration_ms:integer stops_api_ms:integer status:integer
