@@ -53,3 +53,8 @@ make status                      # what the boards see, per lab
 
 Then follow the alert in OpenSearch Dashboards (http://localhost:5601) and Jaeger (http://localhost:16686).
 `make fix` is the mitigation, `make reset` gets the lab ready for the next run.
+
+## License
+
+[Apache-2.0](LICENSE), for the code and for the deck. The Bronto name, logo and dinosaur illustrations are
+trademarks of Bronto and not covered by the license.
