@@ -7,7 +7,8 @@
 //           logs, traces), which replaces the log files lane. Icinga and Prometheus stay, they keep their value.
 // Icons match the houses in the villages picture (check, graph, log line).
 import { useId } from 'vue'
-withDefaults(defineProps<{ stage?: number }>(), { stage: 0 })
+// brand: example backends under the backend's name (OpenSearch, Bronto)
+withDefaults(defineProps<{ stage?: number; brand?: boolean }>(), { stage: 0, brand: false })
 // marker ids per instance: the deck has two LabMaps, url(#id) would hit the hidden one
 const uid = useId()
 const mk = (c: string) => `url(#${uid}-${c})`
@@ -99,14 +100,20 @@ const badgeX = (n: number, i: number, mid: number) => mid + (i - (n - 1) / 2) * 
 
       <rect x="754" :y="box(stage).y" width="136" :height="box(stage).h" rx="14" class="new" />
       <template v-if="stage >= 2">
-        <text x="822" :y="box(stage).mid - 8" class="bt">One backend</text>
-        <text x="822" :y="box(stage).mid + 15" class="bt">all signals</text>
+        <text x="822" :y="box(stage).mid - 14" class="bt">One backend</text>
+        <text x="822" :y="box(stage).mid + 9" class="bt">all signals</text>
       </template>
       <template v-else>
-        <text x="822" y="282" class="bt">Logs and</text>
-        <text x="822" y="305" class="bt">traces</text>
-        <text x="822" y="330" class="sub">OpenSearch, Jaeger</text>
+        <text x="822" y="256" class="bt">Your</text>
+        <text x="822" y="278" class="bt">observability</text>
+        <text x="822" y="300" class="bt">backend</text>
       </template>
+      <!-- options: one open source, one commercial -->
+      <g v-if="brand" :transform="`translate(0 ${stage >= 2 ? box(stage).mid + 40 : 326})`">
+        <text x="822" y="0" class="sub">e.g. OpenSearch</text>
+        <image href="/img/bronto-dino.png" x="789" y="5" width="18" height="18" />
+        <text x="810" y="19" class="sub left">Bronto</text>
+      </g>
     </g>
     <text x="890" y="402" class="key add" text-anchor="end">M metrics · L logs · T traces</text>
   </svg>

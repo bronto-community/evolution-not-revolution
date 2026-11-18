@@ -13,6 +13,23 @@ fonts:
   sans: Radio Canada Big
   serif: Source Serif 4
   mono: Geist Mono
+layout: full
+---
+
+<img src="/img/osmc-title.png" class="osmc-title" alt="Severin Neumann, Bronto. Evolution, not revolution: growing observability on top of the monitoring you already have. OSMC, Nuremberg, Nov 17-19 2026" />
+
+<style>
+.slidev-layout.full { padding: 0; }
+.osmc-title { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+</style>
+
+<!--
+The OSMC title card. On screen while people gather. Start at 11:15 sharp.
+-->
+
+---
+layout: cover
+class: text-left
 ---
 
 <h1 class="title-hero"><span class="pop"><img src="/img/confetti-left.png" class="confetti c-left" />Evolution,<img src="/img/confetti-right.png" class="confetti c-right" /></span><br>not revolution</h1>
@@ -39,7 +56,6 @@ fonts:
 </style>
 
 <!--
-On screen while people gather. Start at 11:15 sharp.
 No intro yet. Go straight into the cold open and introduce yourself after the fake ending.
 -->
 
@@ -339,7 +355,7 @@ clicks: 1
 
 # What we build
 
-<LabMap :stage="$clicks" />
+<LabMap :stage="$clicks" brand />
 
 <!--
 [19:00] The lab, with the stack most of us have. The apps: departures-api calls stops-api. Icinga checks them and alerts. Prometheus scrapes them and draws the graphs. A log shipper puts the logs into central storage. All of that stays.
@@ -682,7 +698,7 @@ clicks: 1
 
 # What we added, and what's next
 
-<LabMap :stage="1 + $clicks" />
+<LabMap :stage="1 + $clicks" brand />
 
 <div class="vil-cap" style="margin-top: 1.1rem">
   <span v-if="$clicks === 0"><i class="chip add">added</i>A Collector, the same names everywhere, traces. The checks and graphs kept running the whole time.</span>
