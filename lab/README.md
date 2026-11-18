@@ -112,7 +112,7 @@ fully developed at the end of the ramp.
 
 ## The live demo
 
-In the talk the demo is replayed from stills (slides 21-24 and 29-35): `make walk` captures them while the incident
+In the talk the demo is replayed from stills (slides 22-25 and 30-36): `make walk` captures them while the incident
 is on (about 5 minutes after the rollout starts); the deck outlines and zooms each step. The steps below are the same
 click paths, for doing it live (Q&A, workshops).
 

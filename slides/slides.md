@@ -56,7 +56,82 @@ class: text-left
 </style>
 
 <!--
-No intro yet. Go straight into the cold open and introduce yourself after the fake ending.
+Title on screen. Next: who is talking.
+-->
+
+---
+layout: center
+---
+
+<div class="intro">
+<div class="intro-me">
+<img src="/img/severin.png" class="me-photo" />
+<div class="eyebrow">Who is talking</div>
+<h1 class="me-name">Severin&nbsp;Neumann</h1>
+<div class="me-role">Head of Community at Bronto</div>
+<div class="sc-list me-list">
+<span><b>OpenTelemetry</b> maintainer and member of the <b>Governance Committee</b></span>
+<span><b>CNCF Ambassador</b></span>
+</div>
+<div class="me-handles">
+<a href="https://svrnm.com" target="_blank" rel="noopener">svrnm.com</a>
+<span class="dot">·</span> GitHub &amp; BlueSky <b>@svrnm</b>
+<span class="dot">·</span> CNCF Slack <b>@Severin</b>
+</div>
+</div>
+<div class="intro-co card">
+<img src="/img/bronto-logo.webp" class="co-logo" />
+<div class="co-claim">We build an OpenTelemetry-native backend for logs, metrics and traces.</div>
+<div class="co-foot">
+<a class="co-url" href="https://bronto.io" target="_blank" rel="noopener">bronto.io</a>
+</div>
+</div>
+</div>
+
+<style>
+.intro {
+  display: grid; grid-template-columns: 1.05fr 1fr; gap: 3rem;
+  align-items: center; width: 100%; max-width: 54rem; margin: 0 auto;
+  text-align: left;
+}
+
+/* speaker */
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--sapphire); margin-bottom: 0.7rem; }
+.me-photo {
+  width: 132px; height: 132px; border-radius: 50%; object-fit: cover;
+  object-position: 52% 18%; margin-bottom: 1.1rem;
+  box-shadow: 0 0 0 3px var(--mint), 0 0 0 6px var(--bg);
+}
+.me-name { font-size: 2.3rem; margin: 0; }
+.me-role {
+  margin-top: 0.45rem; font-family: 'Kalam', cursive;
+  font-size: 1.1rem; color: var(--sapphire);
+}
+.me-list { margin-top: 1.3rem; }
+.me-list span { font-size: 0.98rem; line-height: 1.4; }
+.me-handles {
+  margin-top: 1.3rem; font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem; color: var(--ink-dim); line-height: 1.7;
+}
+.me-handles b { color: var(--ink); font-weight: 600; }
+.me-handles .dot { margin: 0 0.45rem; color: var(--border); }
+
+/* company */
+.intro-co { padding: 1.3rem 1.4rem 1.2rem; }
+.co-logo { width: 128px; height: auto; }
+.co-claim {
+  margin-top: 0.9rem; font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.3rem; line-height: 1.2; max-width: 24ch;
+}
+.co-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; margin-top: 1.3rem;
+}
+.co-url { font-family: 'Geist Mono', monospace; font-size: 0.95rem; }
+</style>
+
+<!--
+Thirty seconds, no more. The OpenTelemetry hat is why I care about this topic, the Bronto hat is why I get to spend work time on it. Then straight into the cold open. No pitch: OSMC talks are educational, promotional content is not allowed.
 -->
 
 ---
@@ -146,7 +221,6 @@ class: text-center
 <!--
 [5:00] Pause, long enough that a few people reach for their bags.
 [click] …or does it?
-Now introduce yourself in one sentence: Severin, Bronto, OpenTelemetry Governance Committee.
 -->
 
 ---
