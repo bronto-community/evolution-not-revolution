@@ -5,6 +5,8 @@ Growing observability on top of the monitoring you already have. A talk by Sever
 
 **Slides:** https://evolution-not-revolution-talk.vercel.app (presenter view with speaker notes: `/presenter`)
 
+**PDF:** https://evolution-not-revolution-talk.vercel.app/evolution-not-revolution.pdf
+
 > Evolution, Not Revolution: Growing Observability on Top of the Monitoring You Already Have
 >
 > It’s 2 a.m. Your monitoring is doing exactly what you built it to do: a check has gone red, the alert fired, you know something is wrong. So you start digging, and that’s where it gets slow. Which request? Which dependency? Why this time and not the last thousand? Your checks and dashboards told you that there’s a problem. Answering why is a different job, and it’s the job traces and logs are built for. You’ve spent years building your monitoring, Icinga, Nagios, Checkmk, dashboards, a log pipeline, and it works. Now everyone’s talking about “observability” and OpenTelemetry, and the unspoken question is: do I throw this away and start over?

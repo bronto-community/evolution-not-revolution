@@ -718,7 +718,7 @@ class: agent-vid
 ---
 
 <div class="vid-cue">Logs only</div>
-<SlidevVideo v-click autoplay autoreset="slide" class="agent-video">
+<SlidevVideo v-click autoplay autoreset="slide" print-poster="/video/agent-classic-end.jpg" class="agent-video">
   <source src="/video/agent-classic.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -732,7 +732,7 @@ class: agent-vid
 ---
 
 <div class="vid-cue good">With context</div>
-<SlidevVideo v-click autoplay autoreset="slide" class="agent-video">
+<SlidevVideo v-click autoplay autoreset="slide" print-poster="/video/agent-enriched-end.jpg" class="agent-video">
   <source src="/video/agent-enriched.mp4" type="video/mp4" />
 </SlidevVideo>
 
